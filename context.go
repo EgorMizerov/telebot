@@ -5,6 +5,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"context"
 )
 
 // HandlerFunc represents a handler function, which is
@@ -174,6 +175,7 @@ type Context interface {
 // nativeContext is a native implementation of the Context interface.
 // "context" is taken by context package, maybe there is a better name.
 type nativeContext struct {
+	context.Context
 	b     *Bot
 	u     Update
 	lock  sync.RWMutex
