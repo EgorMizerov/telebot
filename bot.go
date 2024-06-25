@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"context"
 	"sync"
 	"time"
 )
@@ -267,6 +268,7 @@ func (b *Bot) NewMarkup() *ReplyMarkup {
 // field by the passed update.
 func (b *Bot) NewContext(u Update) Context {
 	return &nativeContext{
+		Context: context.Background(),
 		b: b,
 		u: u,
 	}
