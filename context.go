@@ -1,11 +1,11 @@
 package telebot
 
 import (
+	"context"
 	"errors"
 	"strings"
 	"sync"
 	"time"
-	"context"
 )
 
 // HandlerFunc represents a handler function, which is
@@ -14,6 +14,9 @@ type HandlerFunc func(Context) error
 
 // Context wraps an update and represents the context of current event.
 type Context interface {
+	// Context must be implement context.Context
+	context.Context
+
 	// Bot returns the bot instance.
 	Bot() *Bot
 
