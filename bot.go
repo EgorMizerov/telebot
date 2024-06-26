@@ -1,6 +1,7 @@
 package telebot
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,7 +11,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"context"
 	"sync"
 	"time"
 )
@@ -43,9 +43,10 @@ func NewBot(pref Settings) (*Bot, error) {
 		Poller:  pref.Poller,
 		onError: pref.OnError,
 
-		Updates:  make(chan Update, pref.Updates),
-		handlers: make(map[string]HandlerFunc),
-		stop:     make(chan chan struct{}),
+		Updates:        make(chan Update, pref.Updates),
+		handlers:       make(map[string]HandlerFunc),
+		regexpHandlers: make(map[string]HandlerFunc),
+		stop:           make(chan chan struct{}),
 
 		synchronous: pref.Synchronous,
 		verbose:     pref.Verbose,
@@ -76,13 +77,14 @@ type Bot struct {
 	Poller  Poller
 	onError func(error, Context)
 
-	group       *Group
-	handlers    map[string]HandlerFunc
-	synchronous bool
-	verbose     bool
-	parseMode   ParseMode
-	stop        chan chan struct{}
-	client      *http.Client
+	group          *Group
+	handlers       map[string]HandlerFunc
+	regexpHandlers map[string]HandlerFunc
+	synchronous    bool
+	verbose        bool
+	parseMode      ParseMode
+	stop           chan chan struct{}
+	client         *http.Client
 
 	stopMu     sync.RWMutex
 	stopClient chan struct{}
@@ -185,6 +187,13 @@ func (b *Bot) Handle(endpoint interface{}, h HandlerFunc, m ...MiddlewareFunc) {
 		m = appendMiddleware(b.group.middleware, m)
 	}
 
+	if len(end) > 4 && end[:3] == "rx:" {
+		b.regexpHandlers[end] = func(c Context) error {
+			return applyMiddleware(h, m...)(c)
+		}
+		return
+	}
+
 	b.handlers[end] = func(c Context) error {
 		return applyMiddleware(h, m...)(c)
 	}
@@ -269,8 +278,8 @@ func (b *Bot) NewMarkup() *ReplyMarkup {
 func (b *Bot) NewContext(u Update) Context {
 	return &nativeContext{
 		Context: context.Background(),
-		b: b,
-		u: u,
+		b:       b,
+		u:       u,
 	}
 }
 

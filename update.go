@@ -1,6 +1,9 @@
 package telebot
 
-import "strings"
+import (
+	"regexp"
+	"strings"
+)
 
 // Update object represents an incoming update.
 type Update struct {
@@ -328,6 +331,14 @@ func (b *Bot) handle(end string, c Context) bool {
 	if handler, ok := b.handlers[end]; ok {
 		b.runHandler(handler, c)
 		return true
+	} else {
+		for rx, handler := range b.regexpHandlers {
+			ok, _ := regexp.MatchString(rx[3:], end)
+			if ok {
+				b.runHandler(handler, c)
+			}
+			return true
+		}
 	}
 	return false
 }
