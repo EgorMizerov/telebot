@@ -97,6 +97,9 @@ func (t *ReplyButton) CallbackUnique() string {
 
 // CallbackUnique returns InlineButton.Unique.
 func (t *InlineButton) CallbackUnique() string {
+	if t.RXUnique != "" {
+		return t.RXUnique
+	}
 	return "\f" + t.Unique
 }
 
