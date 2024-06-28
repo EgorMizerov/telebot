@@ -156,9 +156,8 @@ func (b *Bot) Use(middleware ...MiddlewareFunc) {
 }
 
 var (
-	cmdRx    = regexp.MustCompile(`^(/\w+)(@(\w+))?(\s|$)(.+)?`)
-	cbackRx  = regexp.MustCompile(`^\f(.+)(\|(.+))?$`)
-	cbackRRx = regexp.MustCompile(`^\r(.+)(\|(.+))?$`)
+	cmdRx   = regexp.MustCompile(`^(/\w+)(@(\w+))?(\s|$)(.+)?`)
+	cbackRx = regexp.MustCompile(`^\f(.+)(\|(.+))?$`)
 )
 
 // Handle lets you set the handler for some command name or

@@ -102,7 +102,7 @@ func (t *InlineButton) CallbackUnique() string {
 
 // CallbackRXUnique returns InlineButton.RXUnique.
 func (t *InlineButton) CallbackRXUnique() string {
-	return "\r" + t.RXUnique
+	return t.RXUnique
 }
 
 // CallbackUnique implements CallbackEndpoint.
