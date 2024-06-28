@@ -270,7 +270,8 @@ type InlineButton struct {
 	// try to be as specific as possible.
 	//
 	// It will be used as a callback endpoint.
-	Unique string `json:"unique,omitempty"`
+	Unique   string `json:"unique,omitempty"`
+	RXUnique string `json:"rxunique,omitempty"`
 
 	Text                  string             `json:"text"`
 	URL                   string             `json:"url,omitempty"`

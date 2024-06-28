@@ -6,6 +6,12 @@ type CallbackEndpoint interface {
 	CallbackUnique() string
 }
 
+// CallbackRXEndpoint is an interface any element capable
+// of responding to a callback `\r<rxunique>`.
+type CallbackRXEndpoint interface {
+	CallbackRXUnique() string
+}
+
 // Callback object represents a query from a callback button in an
 // inline keyboard.
 type Callback struct {
@@ -39,6 +45,11 @@ type Callback struct {
 	// callback was fired. Sets immediately before the handling,
 	// while the Data field stores only with payload.
 	Unique string `json:"-"`
+
+	// RXUnique displays an unique of the button from which the
+	// callback was fired. Sets immediately before the handling,
+	// while the Data field stores only with payload.
+	RXUnique string `json:"-"`
 }
 
 // MessageSig satisfies Editable interface.
@@ -87,6 +98,11 @@ func (t *ReplyButton) CallbackUnique() string {
 // CallbackUnique returns InlineButton.Unique.
 func (t *InlineButton) CallbackUnique() string {
 	return "\f" + t.Unique
+}
+
+// CallbackRXUnique returns InlineButton.RXUnique.
+func (t *InlineButton) CallbackRXUnique() string {
+	return "\r" + t.RXUnique
 }
 
 // CallbackUnique implements CallbackEndpoint.

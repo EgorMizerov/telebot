@@ -156,8 +156,9 @@ func (b *Bot) Use(middleware ...MiddlewareFunc) {
 }
 
 var (
-	cmdRx   = regexp.MustCompile(`^(/\w+)(@(\w+))?(\s|$)(.+)?`)
-	cbackRx = regexp.MustCompile(`^\f(.+)(\|(.+))?$`)
+	cmdRx    = regexp.MustCompile(`^(/\w+)(@(\w+))?(\s|$)(.+)?`)
+	cbackRx  = regexp.MustCompile(`^\f(.+)(\|(.+))?$`)
+	cbackRRx = regexp.MustCompile(`^\r(.+)(\|(.+))?$`)
 )
 
 // Handle lets you set the handler for some command name or
@@ -1288,6 +1289,8 @@ func extractEndpoint(endpoint interface{}) string {
 		return end
 	case CallbackEndpoint:
 		return end.CallbackUnique()
+	case CallbackRXEndpoint:
+		return end.CallbackRXUnique()
 	}
 	return ""
 }

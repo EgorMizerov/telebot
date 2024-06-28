@@ -266,6 +266,18 @@ func (b *Bot) ProcessUpdate(u Update) {
 				}
 			}
 		}
+		if data := u.Callback.Data; data != "" && data[0] == '\r' {
+			match := cbackRRx.FindAllStringSubmatch(data, -1)
+			if match != nil {
+				unique, payload := match[0][1], match[0][3]
+				if handler, ok := b.handlers["\r"+unique]; ok {
+					u.Callback.RXUnique = unique
+					u.Callback.Data = payload
+					b.runHandler(handler, c)
+					return
+				}
+			}
+		}
 
 		b.handle(OnCallback, c)
 		return
