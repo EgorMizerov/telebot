@@ -336,8 +336,8 @@ func (b *Bot) handle(end string, c Context) bool {
 			ok, _ := regexp.MatchString(rx[3:], end)
 			if ok {
 				b.runHandler(handler, c)
+				return true
 			}
-			return true
 		}
 	}
 	return false
